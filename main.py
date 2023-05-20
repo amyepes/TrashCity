@@ -1,7 +1,7 @@
 #Zona de clases y metodos:
 
 from datetime import datetime
-
+import unittest
 
 class Ruta:
     def __init__(self):
@@ -66,6 +66,7 @@ class Carga:
 
 
 class CentroAcopio:
+
     def __init__(self):
         self.registros = []
 
@@ -119,8 +120,9 @@ ubicacion1 = Ubicación(punto=punto1, tiempo=tiempo1)
 ubicacion2 = Ubicación(punto=punto2, tiempo=tiempo1)
 
 # Asignación de carga a las ubicaciones
-ubicacion1.carga.vidrio = 1.5
-ubicacion2.carga.vidrio = 0.8
+ubicacion1.carga.vidrio = 1.4
+ubicacion2.carga.vidrio = 1
+# la cantidad final ha de ser 2.4 (en este caso)
 
 # Creación de objeto Turno y asignación de camión, ruta y ubicaciones
 horaInicio = datetime.now()
@@ -138,7 +140,25 @@ empresa = Empresa(nombre="TrashCity")
 empresa.servicioRecoleccion = ServicioRecoleccion()
 empresa.centroAcopio = centro_acopio
 
-day = datetime(year=2023, month=5, day=19)  # Fecha específica
+# prueba con el unittest del metodo getGlassTotal, y a su vez internamente se evalua el getGlass por turno
+
+
+class TestCentroAcopio(unittest.TestCase):
+    def test_getGlassTotal(self):
+        day = datetime(year=2023, month=5, day=19)
+        total_vidrio = empresa.centroAcopio.getGlassTotal(day)
+        expected_result = 2.4
+        self.assertEqual(total_vidrio, expected_result)
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+# La misma modalidad de prueba pero de forma "manual" para ver la salida que da el metodo
+
+
+day = datetime(year=2023, month=5, day=19)  
 total_vidrio = empresa.centroAcopio.getGlassTotal(day)
-print("El total de vidrio recolectado durante el dia ", day, "fue de: ",total_vidrio, "Ton")
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+print("Resultado de la prueba de integración: ")
+print("El total de vidrio recolectado durante el dia ", day, "fue de: ", total_vidrio, "Ton")
+print("El esperado como ya comprobo el unittest.")
